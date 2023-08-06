@@ -7,13 +7,13 @@ app = Flask(__name__)
 CORS(app)
 
 # Load the saved model
-model = tf.keras.models.load_model('models/model8.h5',compile=False)
+model = tf.keras.models.load_model('models/model8_10.h5',compile=False)
 
 # Load the saved weights
-model.load_weights('models/weights.h5')
+model.load_weights('models/weights_10.h5')
 
 # Load the saved tokenizer
-with open('models/tokenizer.pickle', 'rb') as file:
+with open('models/tokenizer_10.pickle', 'rb') as file:
     tokenizer = pickle.load(file)
 
 @app.route('/')
@@ -30,7 +30,7 @@ def predict():
     sequence = tokenizer.texts_to_sequences([text])
 
     # Pad the sequence to a fixed length
-    max_len = 500 # or whatever your sequence length is
+    max_len = 20 # or whatever your sequence length is
     padded = tf.keras.preprocessing.sequence.pad_sequences(sequence, maxlen=max_len, padding='post')
 
     # Use the loaded model to make a prediction
