@@ -3,7 +3,10 @@ from flask_cors import CORS
 import tensorflow as tf
 import pickle5 as pickle
 import os
+import logging
 
+#configuration of log
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 port = os.environ.get('PORT',10000)
 PORT = 10000
@@ -29,22 +32,31 @@ def index():
 # Define the API route
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get the text data from the request body
-    text = request.json['text']
-
-    # Convert the text to a sequence using the loaded tokenizer
-    sequence = tokenizer.texts_to_sequences([text])
-
-    # Pad the sequence to a fixed length
-    max_len = 20 # or whatever your sequence length is
-    padded = tf.keras.preprocessing.sequence.pad_sequences(sequence, maxlen=max_len, padding='post')
-
-    # Use the loaded model to make a prediction
-    prediction = model.predict(padded)
-
-    # Return the predicted label as a JSON response
-    label = 'clickbait' if prediction[0][0] > 0.5 else 'not clickbait'
-    return jsonify({'label': label})
+    try:
+        # Get the text data from the request body
+        text = request.json['text']
+    
+        # Convert the text to a sequence using the loaded tokenizer
+        sequence = tokenizer.texts_to_sequences([text])
+    
+        # Pad the sequence to a fixed length
+        max_len = 20 # or whatever your sequence length is
+        padded = tf.keras.preprocessing.sequence.pad_sequences(sequence, maxlen=max_len, padding='post')
+    
+        # Use the loaded model to make a prediction
+        prediction = model.predict(padded)
+    
+        # Return the predicted label as a JSON response
+        label = 'clickbait' if prediction[0][0] > 0.5 else 'not clickbait'
+        logging.info(f"Input text: {text}")
+        logging.info(f"Prediction: {label}")
+    
+        return jsonify({'label': label})
+    
+    except Exception as e:
+        # Log any errors that occur during prediction
+        logging.error(f"Error during prediction: {str(e)}")
+        return jsonify({'error': 'An error occurred during prediction.'}), 500
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=port)
