@@ -22,6 +22,7 @@ with open('models/tokenizer_10.pickle', 'rb') as file:
     tokenizer = pickle.load(file)
 
 app = Flask(__name__)
+CORS(app, origins="*")
 # CORS(app)
 
 
