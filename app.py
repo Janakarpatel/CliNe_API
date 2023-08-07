@@ -26,12 +26,12 @@ CORS(app, origins="*")
 # CORS(app)
 
 
-# @app.route('/')
-# def index():
-#     return "Welcome to our CliNe's authorized API! To access our services through the Chrome extension, simply follow on web store to integrate it seamlessly with your browser. We value intellectual property rights, and all data and content provided through our API are protected by copyright laws. By accessing and using our API, you agree to abide by the copyright terms and conditions. Thank you for choosing our service, Happy browsing! © [CliNe.AI] 2023. All rights reserved."
+@app.route('/')
+def index():
+    return "Welcome to our CliNe's authorized API! To access our services through the Chrome extension, simply follow on web store to integrate it seamlessly with your browser. We value intellectual property rights, and all data and content provided through our API are protected by copyright laws. By accessing and using our API, you agree to abide by the copyright terms and conditions. Thank you for choosing our service, Happy browsing! © [CliNe.AI] 2023. All rights reserved."
 
 # Define the API route
-@app.route('/', methods=['POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
     try:
         # Get the text data from the request body
