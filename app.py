@@ -1,10 +1,12 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request,render_template
 from flask_cors import CORS
 import tensorflow as tf
 import pickle5 as pickle
+import os
 
-app = Flask(__name__)
-CORS(app)
+
+port = os.environ.get('PORT',10000)
+PORT = 10000
 
 # Load the saved model
 model = tf.keras.models.load_model('models/model8_10.h5',compile=False)
@@ -16,8 +18,12 @@ model.load_weights('models/weights_10.h5')
 with open('models/tokenizer_10.pickle', 'rb') as file:
     tokenizer = pickle.load(file)
 
+app = Flask(__name__)
+# CORS(app)
+
+
 @app.route('/')
-def hello():
+def index():
     return "Welcome to our CliNe's authorized API! To access our services through the Chrome extension, simply follow on web store to integrate it seamlessly with your browser. We value intellectual property rights, and all data and content provided through our API are protected by copyright laws. By accessing and using our API, you agree to abide by the copyright terms and conditions. Thank you for choosing our service, Happy browsing! © [CliNe.AI] 2023. All rights reserved."
 
 # Define the API route
@@ -41,4 +47,4 @@ def predict():
     return jsonify({'label': label})
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0",port=port)
